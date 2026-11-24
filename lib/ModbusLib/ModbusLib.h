@@ -47,6 +47,8 @@ struct MB_Telemetry {
 // relative=false sends each driver to the same absolute target coordinate.
 MB_Result MB_Connect();
 MB_Result MB_Disconnect();
+MB_Result MB_SetupDriver(const uint8_t* addresses = nullptr,
+                    size_t addressCount = 0);
 MB_Result MB_MoveTo(float target,
                     MB_Unit unit = MB_Unit::Degrees,
                     const uint8_t* addresses = nullptr,

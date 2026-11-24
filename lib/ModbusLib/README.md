@@ -193,6 +193,19 @@ if (MB_ReadRegisters(0x01, 0x0033, 1, &fault) == MB_Result::Ok) {
 | `0x0066` | Snelheidslimiet |
 | `0x0099` | Alarm: `0` aan, `1` uit |
 
+## Default Settings
+
+| Register | Waarde | Omschrijving |
+|---|---|---|
+| `0x0070` | `0x1` | Time-Position Closed Loop Control |
+| `0x0071` | `0x0` | Allowable Error |
+| `0x0072` | `0x1` | Overshoot correction allowed |
+| `0x0073` | `0x8` | 8 polen op de motor |
+| `0x0074` | `0xA` | Reductiefactor 1 |
+| `0x0093` | `0x2` | Position Closed Loop Control |
+| `0x00B2` | `0x1000` | Maximale snelheid = Vmax |
+| `0x00B3` | `0x1000` | Maximale snelheid achteruit = -Vmax |
+
 ## Bestanden
 
 - `ModbusLib.h`: publieke API en datatypes

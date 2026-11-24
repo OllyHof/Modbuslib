@@ -323,7 +323,35 @@ MB_Result MB_Disconnect() {
     g_connected = false;
     return result;
 }
+MB_Result MB_SetupDriver(const uint8_t* addresses, size_t addressCount) {
+    if (!g_connected) {
+        return MB_Result::NotInitialized;
+    }
+    if (!validTargetList(addresses, addressCount)) {
+        return MB_Result::InvalidArgument;
+    }
+    
+    MB_Result overall = MB_Result::Ok;
+    const size_t count = resolvedTargetCount(addresses, addressCount);
+     for (size_t i = 0; i < count; ++i) {
+        const uint8_t address = resolvedTargetAddress(addresses, i);
+        MB_Result result = MB_Result::Ok;
+        
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0070, 0x1); // Enable Time-Position closed-loop control
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0071, 0x0); // Set Allowed Error to 0 
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0072, 0x1); // Enable Overshoot correction
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0073, 0x8); // Set 8 Poles for the motor
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0074, 0xA); // Set Reduction Ratio to 1:1
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x0093, 0x2); // Enable Position Closed-Loop Control
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x00b2, 0x1000); // Maximum Speed forwards is vMax
+        if (result == MB_Result::Ok) result = MB_Write(address, 0x00b3, 0x1000); // Maximum Speed backwards is vMax
 
+        overall = firstError(overall, result);
+    }
+    return overall;
+    
+
+}
 MB_Result MB_MoveTo(float target, MB_Unit unit,
                     const uint8_t* addresses, size_t addressCount,
                     bool relative) {
